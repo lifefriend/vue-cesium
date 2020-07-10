@@ -20,7 +20,7 @@ module.exports = {
     config.resolve.alias
       .set('vue$', 'vue/dist/vue.esm.js')
       .set('@', path.resolve(__dirname, './src'))
-      .set('cesium', path.resolve(__dirname, './node_modules/cesium/Source'))
+      // .set('cesium', path.resolve(__dirname, './node_modules/cesium/Source'))
   },
   configureWebpack: {
     amd: {

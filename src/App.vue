@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import Cesium from 'cesium/Cesium'
-import 'cesium/Widgets/widgets.css'
+import 'cesium/Source/Widgets/widgets.css'
+import * as Cesium from 'cesium'
 export default {
   name: 'App',
   mounted () {
