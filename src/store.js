@@ -5,10 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-
+    mapInstance: null
+  },
+  getters: {
+    mapInstance: state => state.mapInstance
   },
   mutations: {
-
+    setMapInstance (state, mapInstance) {
+      state.mapInstance = mapInstance
+    }
   },
   actions: {
 
