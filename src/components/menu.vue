@@ -7,6 +7,12 @@
         <li class="nav-item" @click="addAnimationLine">
           <a class="nav-link" href="#">流向动态线</a>
         </li>
+        <li class="nav-item" @click="addClusterLayer">
+          <a class="nav-link" href="#">聚类图层</a>
+        </li>
+        <li class="nav-item" @click="addGifLayer">
+          <a class="nav-link" href="#">GIF图标</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -16,12 +22,24 @@
 import { mapGetters } from 'vuex'
 import * as Cesium from 'cesium'
 import { addAnimationLine } from '../map'
+import ClusterLayer from '../map/layer/cluster.js'
+import OverLayer from '../map/layer/overlay.js'
 
 export default {
   computed: {
     ...mapGetters(['mapInstance'])
   },
   methods: {
+    setCenter (xyz) {
+      this.mapInstance.camera.setView({
+        destination: Cesium.Cartesian3.fromDegrees(xyz.x, xyz.y, xyz.z || 50000), // 设置位置
+        orientation: {
+          heading: Cesium.Math.toRadians(0), // 方向
+          pitch: Cesium.Math.toRadians(-90), // 倾斜角度
+          roll: Cesium.Math.toRadians(0)
+        }
+      })
+    },
     addAnimationLine () {
       if (this.mapInstance) {
         const from = {
@@ -46,18 +64,35 @@ export default {
             y: 39.98
           }
         ]
-
-        this.mapInstance.camera.setView({
-          destination: Cesium.Cartesian3.fromDegrees(from.x, from.y, 50000), // 设置位置
-          orientation: {
-            heading: Cesium.Math.toRadians(0), // 方向
-            pitch: Cesium.Math.toRadians(-90), // 倾斜角度
-            roll: Cesium.Math.toRadians(0)
-          }
-        })
-
         addAnimationLine(from, to, this.mapInstance)
+        this.setCenter(from)
       }
+    },
+    addClusterLayer () {
+      const arr = []
+      for (let i = 0; i < 50; i++) {
+        arr.push({
+          x: 114 + Math.random(),
+          y: 30 + Math.random()
+        })
+      }
+      new ClusterLayer(this.mapInstance).addData(arr)
+      this.setCenter({
+        x: 114.318312,
+        y: 30.47259,
+        z: 5000000
+      })
+    },
+    addGifLayer () {
+      new OverLayer(this.mapInstance).addData({
+        x: 114.318312,
+        y: 30.47259
+      })
+      this.setCenter({
+        x: 114.318312,
+        y: 30.47259,
+        z: 5000000
+      })
     }
   }
 }

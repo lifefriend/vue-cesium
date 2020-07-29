@@ -29,5 +29,6 @@ yarn run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Cesium configuration
-https://cesium.com/docs/tutorials/cesium-and-webpack/
+https://cesium.com/docs/tutorials/cesium-and-webpack/  
+
 https://github.com/AnalyticalGraphicsInc/cesium-webpack-example
