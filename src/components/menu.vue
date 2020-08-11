@@ -13,6 +13,9 @@
         <li class="nav-item" @click="addGifLayer">
           <a class="nav-link" href="#">GIF图标</a>
         </li>
+        <li class="nav-item" @click="addViewShed">
+          <a class="nav-link" href="#">视域分析</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -24,6 +27,7 @@ import * as Cesium from 'cesium'
 import { addAnimationLine } from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
+import { ViewShedAnalysis } from '../map/viewShed'
 
 export default {
   computed: {
@@ -93,6 +97,9 @@ export default {
         y: 30.47259,
         z: 5000000
       })
+    },
+    addViewShed () {
+      ViewShedAnalysis(this.mapInstance)
     }
   }
 }

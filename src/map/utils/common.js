@@ -34,3 +34,38 @@ export function getLinkedPointList (e, t, i, r) {
   n.push(t)
   return n
 }
+export function getCatesian3FromPX (px, viewer) {
+  if (!px) return
+  var ray = viewer.camera.getPickRay(px)
+  if (!ray) return
+  var cartesian = viewer.scene.globe.pick(ray, viewer.scene)
+  return cartesian
+}
+export function getLonLat (viewer, cartesian) {
+  var cartographic = viewer.scene.globe.ellipsoid.cartesianToCartographic(cartesian)
+  cartographic.height = viewer.scene.globe.getHeight(cartographic)
+  var pos = {
+    lon: cartographic.longitude,
+    lat: cartographic.latitude,
+    alt: cartographic.height
+  }
+  pos.lon = Cesium.Math.toDegrees(pos.lon)
+  pos.lat = Cesium.Math.toDegrees(pos.lat)
+  return pos
+}
+export function getAngle (pntFirst, pntNext) {
+  var dRotateAngle = Math.atan2(Math.abs(pntFirst.lon - pntNext.lon), Math.abs(pntFirst.lat - pntNext.lat))
+  if (pntNext.lon >= pntFirst.lon) {
+    if (pntNext.lat >= pntFirst.lat) {
+      //
+    } else {
+      dRotateAngle = Math.PI - dRotateAngle
+    }
+  } else if (pntNext.lat >= pntFirst.lat) {
+    dRotateAngle = 2 * Math.PI - dRotateAngle
+  } else {
+    dRotateAngle = Math.PI + dRotateAngle
+  }
+  dRotateAngle = dRotateAngle * 180 / Math.PI
+  return dRotateAngle
+}
