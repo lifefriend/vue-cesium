@@ -16,6 +16,12 @@
         <li class="nav-item" @click="addViewShed">
           <a class="nav-link" href="#">视域分析</a>
         </li>
+        <li class="nav-item" @click="addKeyBoard">
+          <a class="nav-link" href="#">第一人称</a>
+        </li>
+         <li class="nav-item" @click="removeKeyBoard">
+          <a class="nav-link" href="#">取消第一人称</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -28,10 +34,16 @@ import { addAnimationLine } from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
 import { ViewShedAnalysis } from '../map/viewShed'
+import KeyBoardControl from '../map/control.js'
 
 export default {
   computed: {
     ...mapGetters(['mapInstance'])
+  },
+  data () {
+    return {
+      keyBoard: null
+    }
   },
   methods: {
     setCenter (xyz) {
@@ -100,6 +112,13 @@ export default {
     },
     addViewShed () {
       ViewShedAnalysis(this.mapInstance)
+    },
+    addKeyBoard () {
+      this.keyBoardControl = new KeyBoardControl(this.mapInstance)
+      this.keyBoardControl.start()
+    },
+    removeKeyBoard () {
+      this.keyBoardControl && this.keyBoardControl.stop()
     }
   }
 }
