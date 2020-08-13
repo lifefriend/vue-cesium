@@ -2,6 +2,7 @@
   <div id="app">
     <div id="cesiumContainer"></div>
     <div id="credit-container"></div>
+    <div id="eye-container"></div>
     <Menu/>
   </div>
 </template>
@@ -57,5 +58,13 @@ body {
 }
 #credit-container{
   display:none;
+}
+#eye-container{
+  position: absolute;
+  width: 20%;
+  height: 20%;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
 }
 </style>

@@ -19,8 +19,11 @@
         <li class="nav-item" @click="addKeyBoard">
           <a class="nav-link" href="#">第一人称</a>
         </li>
-         <li class="nav-item" @click="removeKeyBoard">
+        <li class="nav-item" @click="removeKeyBoard">
           <a class="nav-link" href="#">取消第一人称</a>
+        </li>
+        <li class="nav-item" @click="addEyeMap">
+          <a class="nav-link" href="#">鹰眼</a>
         </li>
       </ul>
     </div>
@@ -35,6 +38,7 @@ import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
 import { ViewShedAnalysis } from '../map/viewShed'
 import KeyBoardControl from '../map/control.js'
+import showEyeMap from '../map/eyeMap.js'
 
 export default {
   computed: {
@@ -42,7 +46,8 @@ export default {
   },
   data () {
     return {
-      keyBoard: null
+      keyBoard: null,
+      isEyeMapShow: false
     }
   },
   methods: {
@@ -119,6 +124,12 @@ export default {
     },
     removeKeyBoard () {
       this.keyBoardControl && this.keyBoardControl.stop()
+    },
+    addEyeMap () {
+      if (!this.isEyeMapShow) {
+        this.isEyeMapShow = true
+        showEyeMap('eye-container', this.mapInstance)
+      }
     }
   }
 }
