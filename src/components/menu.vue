@@ -25,8 +25,11 @@
         <li class="nav-item" @click="addEyeMap">
           <a class="nav-link" href="#">鹰眼</a>
         </li>
-         <li class="nav-item" @click="addMvt">
+        <li class="nav-item" @click="addMvt">
           <a class="nav-link" href="#">矢量切片</a>
+        </li>
+        <li class="nav-item" @click="addRightMenu">
+          <a class="nav-link" href="#">右键菜单</a>
         </li>
       </ul>
     </div>
@@ -43,6 +46,7 @@ import { ViewShedAnalysis } from '../map/viewShed'
 import KeyBoardControl from '../map/control.js'
 import showEyeMap from '../map/eyeMap.js'
 import { MVTProvider } from '../map/provider/mvtProvider'
+import RightMenu from '../map/rightMenu'
 
 export default {
   computed: {
@@ -142,6 +146,15 @@ export default {
         url: 'https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={k}',
         key: 'pk.eyJ1IjoibWFyc2dpcyIsImEiOiJja2Fod2xlanIwNjJzMnhvMXBkMnNqcjVpIn0.WnxikCaN2KV_zn9tLZO77A'
       }))
+    },
+    addRightMenu () {
+      new RightMenu(this.mapInstance).setMenu([{
+        id: 'menu-1',
+        text: '菜单1',
+        cb: (e) => {
+          alert(e)
+        }
+      }])
     }
   }
 }

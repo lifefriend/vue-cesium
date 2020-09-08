@@ -1,4 +1,5 @@
 import * as Cesium from 'cesium'
+
 export function getLinkedPointList (e, t, i, r) {
   const n = []
   const o = Cesium.Cartographic.fromCartesian(e)
@@ -68,4 +69,9 @@ export function getAngle (pntFirst, pntNext) {
   }
   dRotateAngle = dRotateAngle * 180 / Math.PI
   return dRotateAngle
+}
+export function getSrcElement (e) {
+  const ev = e || window.event
+  const srcElm = ev.target || ev.srcElement
+  return srcElm
 }
