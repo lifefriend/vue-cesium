@@ -5,7 +5,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" @click="addAnimationLine">
-          <a class="nav-link" href="#">流向动态线</a>
+          <a class="nav-link" href="#">动态抛物线</a>
+        </li>
+        <li class="nav-item" @click="addAnimationStraightLine">
+          <a class="nav-link" href="#">动态直线</a>
         </li>
         <li class="nav-item" @click="addClusterLayer">
           <a class="nav-link" href="#">聚类图层</a>
@@ -39,7 +42,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import * as Cesium from 'cesium'
-import { addAnimationLine } from '../map'
+import { addAnimationLine, addAnimationStraightLine } from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
 import { ViewShedAnalysis } from '../map/viewShed'
@@ -96,6 +99,17 @@ export default {
         addAnimationLine(from, to, this.mapInstance)
         this.setCenter(from)
       }
+    },
+    addAnimationStraightLine () {
+      const coordinates = [[110, 30], [120, 30.4]]
+      addAnimationStraightLine(coordinates, this.mapInstance)
+      const from = {
+        name: '武汉市',
+        x: 114.318312,
+        y: 30.47259,
+        z: 5000000
+      }
+      this.setCenter(from)
     },
     addClusterLayer () {
       const arr = []

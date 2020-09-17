@@ -1,5 +1,6 @@
 import * as Cesium from 'cesium'
 import { LineFlowMaterialProperty } from './material/polylineLineFlowMaterial'
+import { PolylineTrailLinkMaterialProperty } from './material/polylineTrailLinkMaterial'
 import { getLinkedPointList } from './utils/common'
 
 // 流向动态线
@@ -35,5 +36,25 @@ export function addAnimationLine (from, to, viewer) {
         color: new Cesium.Color(1, 201 / 255, 38 / 255, 1)
       }
     })
+  }
+}
+
+// 流向动态直线
+export function addAnimationStraightLine (coordinates, viewer) {
+  if (coordinates instanceof Array) {
+    const positions = [].concat.apply([], coordinates)
+    const material = new PolylineTrailLinkMaterialProperty()
+    viewer.entities.add(
+      new Cesium.Entity({
+        polyline: {
+          positions: Cesium.Cartesian3.fromDegreesArray(positions),
+          width: 5,
+          clampToGround: true,
+          material
+        }
+      })
+    )
+  } else {
+    console.warn('参数错误')
   }
 }
