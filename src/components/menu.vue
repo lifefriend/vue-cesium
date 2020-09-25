@@ -4,6 +4,9 @@
     <a class="navbar-brand" href="#">Navbar</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <base-map/>
+        </li>
         <li class="nav-item" @click="addAnimationLine">
           <a class="nav-link" href="#">动态抛物线</a>
         </li>
@@ -42,6 +45,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import * as Cesium from 'cesium'
+import BaseMap from './baseMap'
 import { addAnimationLine, addAnimationStraightLine } from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
@@ -52,6 +56,9 @@ import { MVTProvider } from '../map/provider/mvtProvider'
 import RightMenu from '../map/rightMenu'
 
 export default {
+  components: {
+    'base-map': BaseMap
+  },
   computed: {
     ...mapGetters(['mapInstance'])
   },
