@@ -75,3 +75,6 @@ export function getSrcElement (e) {
   const srcElm = ev.target || ev.srcElement
   return srcElm
 }
+export function getLength (firstPoint, secondPoint) {
+  return Cesium.Cartesian3.distance(firstPoint, secondPoint)
+}

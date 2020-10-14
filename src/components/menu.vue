@@ -7,6 +7,9 @@
         <li class="nav-item">
           <base-map/>
         </li>
+        <li class="nav-item">
+          <measure/>
+        </li>
         <li class="nav-item" @click="addAnimationLine">
           <a class="nav-link" href="#">动态抛物线</a>
         </li>
@@ -46,6 +49,7 @@
 import { mapGetters } from 'vuex'
 import * as Cesium from 'cesium'
 import BaseMap from './baseMap'
+import Measure from './measure'
 import { addAnimationLine, addAnimationStraightLine } from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
@@ -57,7 +61,8 @@ import RightMenu from '../map/rightMenu'
 
 export default {
   components: {
-    'base-map': BaseMap
+    'base-map': BaseMap,
+    'measure': Measure
   },
   computed: {
     ...mapGetters(['mapInstance'])
