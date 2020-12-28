@@ -5,10 +5,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <base-map/>
+          <base-map />
         </li>
         <li class="nav-item">
-          <measure/>
+          <measure />
         </li>
         <li class="nav-item" @click="addAnimationLine">
           <a class="nav-link" href="#">动态抛物线</a>
@@ -40,6 +40,9 @@
         <li class="nav-item" @click="addRightMenu">
           <a class="nav-link" href="#">右键菜单</a>
         </li>
+        <li class="nav-item" @click="addWaterAnimation">
+          <a class="nav-link" href="#">动态水面</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -50,7 +53,11 @@ import { mapGetters } from 'vuex'
 import * as Cesium from 'cesium'
 import BaseMap from './baseMap'
 import Measure from './measure'
-import { addAnimationLine, addAnimationStraightLine } from '../map'
+import {
+  addAnimationLine,
+  addAnimationStraightLine,
+  addWaterAnimation
+} from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
 import { ViewShedAnalysis } from '../map/viewShed'
@@ -62,7 +69,7 @@ import RightMenu from '../map/rightMenu'
 export default {
   components: {
     'base-map': BaseMap,
-    'measure': Measure
+    measure: Measure
   },
   computed: {
     ...mapGetters(['mapInstance'])
@@ -76,7 +83,11 @@ export default {
   methods: {
     setCenter (xyz) {
       this.mapInstance.camera.setView({
-        destination: Cesium.Cartesian3.fromDegrees(xyz.x, xyz.y, xyz.z || 50000), // 设置位置
+        destination: Cesium.Cartesian3.fromDegrees(
+          xyz.x,
+          xyz.y,
+          xyz.z || 50000
+        ), // 设置位置
         orientation: {
           heading: Cesium.Math.toRadians(0), // 方向
           pitch: Cesium.Math.toRadians(-90), // 倾斜角度
@@ -88,8 +99,8 @@ export default {
       if (this.mapInstance) {
         const from = {
           name: '北京市',
-          x: 116.40,
-          y: 39.90
+          x: 116.4,
+          y: 39.9
         }
         const to = [
           {
@@ -113,7 +124,10 @@ export default {
       }
     },
     addAnimationStraightLine () {
-      const coordinates = [[110, 30], [120, 30.4]]
+      const coordinates = [
+        [110, 30],
+        [120, 30.4]
+      ]
       addAnimationStraightLine(coordinates, this.mapInstance)
       const from = {
         name: '武汉市',
@@ -167,24 +181,46 @@ export default {
     },
     addMvt () {
       this.mapInstance.imageryLayers.removeAll()
-      this.mapInstance.scene.globe.baseColor = new Cesium.Color(1.0, 1.0, 1.0, 1.0)
-      this.mapInstance.scene.imageryLayers.addImageryProvider(new MVTProvider({
-        url: 'https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={k}',
-        key: 'pk.eyJ1IjoibWFyc2dpcyIsImEiOiJja2Fod2xlanIwNjJzMnhvMXBkMnNqcjVpIn0.WnxikCaN2KV_zn9tLZO77A'
-      }))
+      this.mapInstance.scene.globe.baseColor = new Cesium.Color(
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      )
+      this.mapInstance.scene.imageryLayers.addImageryProvider(
+        new MVTProvider({
+          url:
+            'https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={k}',
+          key:
+            'pk.eyJ1IjoibWFyc2dpcyIsImEiOiJja2Fod2xlanIwNjJzMnhvMXBkMnNqcjVpIn0.WnxikCaN2KV_zn9tLZO77A'
+        })
+      )
     },
     addRightMenu () {
-      new RightMenu(this.mapInstance).setMenu([{
-        id: 'menu-1',
-        text: '菜单1',
-        cb: (e) => {
-          alert(e)
+      new RightMenu(this.mapInstance).setMenu([
+        {
+          id: 'menu-1',
+          text: '菜单1',
+          cb: (e) => {
+            alert(e)
+          }
         }
-      }])
+      ])
+    },
+    addWaterAnimation () {
+      addWaterAnimation([
+        114.49, 30.43, 0,
+        115.49, 30.43, 0,
+        115.49, 31.43, 0,
+        114.49, 31.43, 0
+      ], this.mapInstance)
+      this.setCenter({
+        x: 114.5985634205044,
+        y: 32.43079913513041,
+        z: 1000000
+      })
     }
   }
 }
-
 </script>
-<style scoped>
-</style>
+<style scoped></style>
