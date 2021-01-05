@@ -43,6 +43,9 @@
         <li class="nav-item" @click="addWaterAnimation">
           <a class="nav-link" href="#">动态水面</a>
         </li>
+        <li class="nav-item" @click="add3DTiles">
+          <a class="nav-link" href="#">白模渲染</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -56,7 +59,8 @@ import Measure from './measure'
 import {
   addAnimationLine,
   addAnimationStraightLine,
-  addWaterAnimation
+  addWaterAnimation,
+  add3DTiles
 } from '../map'
 import ClusterLayer from '../map/layer/cluster.js'
 import OverLayer from '../map/layer/overlay.js'
@@ -201,24 +205,38 @@ export default {
         {
           id: 'menu-1',
           text: '菜单1',
-          cb: (e) => {
+          cb: e => {
             alert(e)
           }
         }
       ])
     },
     addWaterAnimation () {
-      addWaterAnimation([
-        114.49, 30.43, 0,
-        115.49, 30.43, 0,
-        115.49, 31.43, 0,
-        114.49, 31.43, 0
-      ], this.mapInstance)
+      addWaterAnimation(
+        [
+          114.49,
+          30.43,
+          0,
+          115.49,
+          30.43,
+          0,
+          115.49,
+          31.43,
+          0,
+          114.49,
+          31.43,
+          0
+        ],
+        this.mapInstance
+      )
       this.setCenter({
         x: 114.5985634205044,
         y: 32.43079913513041,
         z: 1000000
       })
+    },
+    add3DTiles () {
+      add3DTiles('http://resource.dvgis.cn/data/3dtiles/ljz/tileset.json', this.mapInstance)
     }
   }
 }
