@@ -2168,10 +2168,10 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
-cesium@^1.71.0:
-  version "1.71.0"
-  resolved "https://registry.npm.taobao.org/cesium/download/cesium-1.71.0.tgz#9a4930f0a06e6f8e8b5a196ea24dc9038778c7fa"
-  integrity sha1-mkkw8KBub46LWhluok3JA4d4x/o=
+cesium@1.72:
+  version "1.72.0"
+  resolved "https://registry.npm.taobao.org/cesium/download/cesium-1.72.0.tgz#dee5da9bfe7313226b6f91dfd8de1541bdc59026"
+  integrity sha1-3uXam/5zEyJrb5Hf2N4VQb3FkCY=
 
 chainsaw@~0.1.0:
   version "0.1.0"

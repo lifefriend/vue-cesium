@@ -46,6 +46,9 @@
         <li class="nav-item" @click="add3DTiles">
           <a class="nav-link" href="#">白模渲染</a>
         </li>
+        <li class="nav-item" @click="addFire">
+          <a class="nav-link" href="#">火焰粒子</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -69,6 +72,7 @@ import KeyBoardControl from '../map/control.js'
 import showEyeMap from '../map/eyeMap.js'
 import { MVTProvider } from '../map/provider/mvtProvider'
 import RightMenu from '../map/rightMenu'
+import Fire from '../map/particleSystem/fire'
 
 export default {
   components: {
@@ -236,7 +240,23 @@ export default {
       })
     },
     add3DTiles () {
-      add3DTiles('http://resource.dvgis.cn/data/3dtiles/ljz/tileset.json', this.mapInstance)
+      add3DTiles(
+        'http://resource.dvgis.cn/data/3dtiles/ljz/tileset.json',
+        this.mapInstance
+      )
+    },
+    addFire () {
+      this.setCenter({
+        x: 114.389,
+        y: 30.67,
+        z: 800
+      })
+      const fire = new Fire(this.mapInstance)
+      fire.start({
+        x: 114.389,
+        y: 30.67,
+        z: 0
+      })
     }
   }
 }

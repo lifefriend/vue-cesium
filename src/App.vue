@@ -30,6 +30,7 @@ export default {
         animation: false, // 是否创建动画小器件，左下角仪表
         timeline: false, // 是否显示时间轴
         vrButton: false, // 是否显示虚拟按钮
+        shouldAnimate: true,
         fullscreenButton: false, // 是否显示全屏按钮
         baseLayerPicker: false, // 是否显示图层选择器
         creditContainer: 'credit-container'
