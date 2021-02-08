@@ -49,6 +49,9 @@
         <li class="nav-item" @click="addFire">
           <a class="nav-link" href="#">火焰粒子</a>
         </li>
+        <li class="nav-item" @click="addPostStage">
+          <a class="nav-link" href="#">下雨</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -73,6 +76,7 @@ import showEyeMap from '../map/eyeMap.js'
 import { MVTProvider } from '../map/provider/mvtProvider'
 import RightMenu from '../map/rightMenu'
 import Fire from '../map/particleSystem/fire'
+import PostStageMangner from '../map/postStage'
 
 export default {
   components: {
@@ -209,7 +213,7 @@ export default {
         {
           id: 'menu-1',
           text: '菜单1',
-          cb: e => {
+          cb: (e) => {
             alert(e)
           }
         }
@@ -257,6 +261,10 @@ export default {
         y: 30.67,
         z: 0
       })
+    },
+    addPostStage () {
+      const postStageMangner = new PostStageMangner(this.mapInstance)
+      postStageMangner.show()
     }
   }
 }
