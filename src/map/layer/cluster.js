@@ -49,7 +49,7 @@ export default class ClusterLayer {
     }
     clusterLayer.clustering.clusterEvent.addEventListener((clusteredEntities, cluster) => {
       cluster.label.show = false
-
+      cluster.billboard.show = true
       if (clusteredEntities.length >= 50) {
         cluster.billboard.image = pin50
       } else if (clusteredEntities.length >= 40) {
