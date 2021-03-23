@@ -1,7 +1,7 @@
 <!-- 菜单栏 -->
 <template>
   <div>
-    <button class="btn btn-secondary dropdown-toggle" type="button" @click="dropDownShow">
+    <button class="btn btn-secondary dropdown-toggle" type="button" @click="doDownShow">
       测量
     </button>
     <div class="dropdown-menu dropdown-menu-left" :class="{ show: dropdownShow }">
@@ -11,28 +11,29 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import MeasureMangner from '../map/measure'
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import MeasureMangner from '../map/measure';
 
 export default {
-  computed: {
-    ...mapGetters(['mapInstance'])
-  },
-  data () {
+  setup() {
+    const dropdownShow = ref(false);
+    const store = useStore();
+    const mapInstance = computed(() => store.getters.mapInstance);
+    const doDownShow = () => {
+      dropdownShow.value = !dropdownShow.value;
+    };
+    const distance = () => {
+      const measureMangner = new MeasureMangner(mapInstance.value);
+      measureMangner.distance();
+    };
     return {
-      dropdownShow: false
-    }
+      dropdownShow,
+      doDownShow,
+      distance,
+    };
   },
-  methods: {
-    dropDownShow () {
-      this.dropdownShow = !this.dropdownShow
-    },
-    distance () {
-      const measureMangner = new MeasureMangner(this.mapInstance)
-      measureMangner.distance()
-    }
-  }
-}
+};
 </script>
 <style scoped>
 .dropdown-menu-left{

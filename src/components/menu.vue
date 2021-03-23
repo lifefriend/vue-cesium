@@ -10,10 +10,10 @@
         <li class="nav-item">
           <measure />
         </li>
-        <li class="nav-item" @click="addAnimationLine">
+        <li class="nav-item" @click="doAnimationLine">
           <a class="nav-link" href="#">动态抛物线</a>
         </li>
-        <li class="nav-item" @click="addAnimationStraightLine">
+        <li class="nav-item" @click="doAnimationStraightLine">
           <a class="nav-link" href="#">动态直线</a>
         </li>
         <li class="nav-item" @click="addClusterLayer">
@@ -40,10 +40,10 @@
         <li class="nav-item" @click="addRightMenu">
           <a class="nav-link" href="#">右键菜单</a>
         </li>
-        <li class="nav-item" @click="addWaterAnimation">
+        <li class="nav-item" @click="doWaterAnimation">
           <a class="nav-link" href="#">动态水面</a>
         </li>
-        <li class="nav-item" @click="add3DTiles">
+        <li class="nav-item" @click="do3DTiles">
           <a class="nav-link" href="#">白模渲染</a>
         </li>
         <li class="nav-item" @click="addFire">
@@ -58,168 +58,165 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import * as Cesium from 'cesium'
-import BaseMap from './baseMap'
-import Measure from './measure'
+import { useStore } from 'vuex';
+import { ref, computed } from 'vue';
+import * as Cesium from 'cesium';
+import BaseMap from './baseMap.vue';
+import Measure from './measure.vue';
 import {
   addAnimationLine,
   addAnimationStraightLine,
   addWaterAnimation,
-  add3DTiles
-} from '../map'
-import ClusterLayer from '../map/layer/cluster.js'
-import OverLayer from '../map/layer/overlay.js'
-import { ViewShedAnalysis } from '../map/viewShed'
-import KeyBoardControl from '../map/control.js'
-import showEyeMap from '../map/eyeMap.js'
-import { MVTProvider } from '../map/provider/mvtProvider'
-import RightMenu from '../map/rightMenu'
-import Fire from '../map/particleSystem/fire'
-import PostStageMangner from '../map/postStage'
+  add3DTiles,
+} from '../map';
+import ClusterLayer from '../map/layer/cluster';
+import OverLayer from '../map/layer/overlay';
+import { ViewShedAnalysis } from '../map/viewShed';
+import KeyBoardControl from '../map/control';
+import showEyeMap from '../map/eyeMap';
+import MVTProvider from '../map/provider/mvtProvider';
+import RightMenu from '../map/rightMenu';
+import Fire from '../map/particleSystem/fire';
+import PostStageMangner from '../map/postStage';
 
 export default {
   components: {
     'base-map': BaseMap,
-    measure: Measure
+    measure: Measure,
   },
-  computed: {
-    ...mapGetters(['mapInstance'])
-  },
-  data () {
-    return {
-      keyBoard: null,
-      isEyeMapShow: false
-    }
-  },
-  methods: {
-    setCenter (xyz) {
-      this.mapInstance.camera.setView({
+  setup() {
+    const keyBoard = ref(false);
+    const keyBoardControl = ref(null);
+    const isEyeMapShow = ref(false);
+    const store = useStore();
+    const mapInstance = computed(() => store.getters.mapInstance);
+    const setCenter = (xyz) => {
+      mapInstance.value.camera.setView({
         destination: Cesium.Cartesian3.fromDegrees(
           xyz.x,
           xyz.y,
-          xyz.z || 50000
+          xyz.z || 50000,
         ), // 设置位置
         orientation: {
           heading: Cesium.Math.toRadians(0), // 方向
           pitch: Cesium.Math.toRadians(-90), // 倾斜角度
-          roll: Cesium.Math.toRadians(0)
-        }
-      })
-    },
-    addAnimationLine () {
-      if (this.mapInstance) {
+          roll: Cesium.Math.toRadians(0),
+        },
+      });
+    };
+    const doAnimationLine = () => {
+      if (mapInstance.value) {
         const from = {
           name: '北京市',
           x: 116.4,
-          y: 39.9
-        }
+          y: 39.9,
+        };
         const to = [
           {
             name: '上海市',
             x: 116.33,
-            y: 39.88
+            y: 39.88,
           },
           {
             name: '郑州市',
             x: 116.41,
-            y: 39.91
+            y: 39.91,
           },
           {
             name: '武汉市',
             x: 116.31,
-            y: 39.98
-          }
-        ]
-        addAnimationLine(from, to, this.mapInstance)
-        this.setCenter(from)
+            y: 39.98,
+          },
+        ];
+        addAnimationLine(from, to, mapInstance.value);
+        setCenter(from);
       }
-    },
-    addAnimationStraightLine () {
+    };
+    const doAnimationStraightLine = () => {
       const coordinates = [
         [110, 30],
-        [120, 30.4]
-      ]
-      addAnimationStraightLine(coordinates, this.mapInstance)
+        [120, 30.4],
+      ];
+      addAnimationStraightLine(coordinates, mapInstance.value);
       const from = {
         name: '武汉市',
         x: 114.318312,
         y: 30.47259,
-        z: 5000000
-      }
-      this.setCenter(from)
-    },
-    addClusterLayer () {
-      const arr = []
+        z: 5000000,
+      };
+      setCenter(from);
+    };
+    const addClusterLayer = () => {
+      const arr = [];
       for (let i = 0; i < 50; i++) {
         arr.push({
           x: 114 + Math.random(),
-          y: 30 + Math.random()
-        })
+          y: 30 + Math.random(),
+        });
       }
-      new ClusterLayer(this.mapInstance).addData(arr)
-      this.setCenter({
+      new ClusterLayer(mapInstance.value).addData(arr);
+      setCenter({
         x: 114.318312,
         y: 30.47259,
-        z: 5000000
-      })
-    },
-    addGifLayer () {
-      new OverLayer(this.mapInstance).addData({
-        x: 114.318312,
-        y: 30.47259
-      })
-      this.setCenter({
+        z: 5000000,
+      });
+    };
+    const addGifLayer = () => {
+      new OverLayer(mapInstance.value).addData({
         x: 114.318312,
         y: 30.47259,
-        z: 5000000
-      })
-    },
-    addViewShed () {
-      ViewShedAnalysis(this.mapInstance)
-    },
-    addKeyBoard () {
-      this.keyBoardControl = new KeyBoardControl(this.mapInstance)
-      this.keyBoardControl.start()
-    },
-    removeKeyBoard () {
-      this.keyBoardControl && this.keyBoardControl.stop()
-    },
-    addEyeMap () {
-      if (!this.isEyeMapShow) {
-        this.isEyeMapShow = true
-        showEyeMap('eye-container', this.mapInstance)
+      });
+      setCenter({
+        x: 114.318312,
+        y: 30.47259,
+        z: 5000000,
+      });
+    };
+    const addViewShed = () => {
+      ViewShedAnalysis(mapInstance.value);
+    };
+    const addKeyBoard = () => {
+      keyBoardControl.value = new KeyBoardControl(mapInstance.value);
+      keyBoardControl.value.start();
+    };
+    const removeKeyBoard = () => {
+      keyBoardControl.value && keyBoardControl.value.stop();
+    };
+    const addEyeMap = () => {
+      if (!isEyeMapShow.value) {
+        isEyeMapShow.value = true;
+        showEyeMap('eye-container', mapInstance.value);
       }
-    },
-    addMvt () {
-      this.mapInstance.imageryLayers.removeAll()
-      this.mapInstance.scene.globe.baseColor = new Cesium.Color(
+    };
+    const addMvt = () => {
+      mapInstance.value.imageryLayers.removeAll();
+      mapInstance.value.scene.globe.baseColor = new Cesium.Color(
         1.0,
         1.0,
         1.0,
-        1.0
-      )
-      this.mapInstance.scene.imageryLayers.addImageryProvider(
+        1.0,
+      );
+      mapInstance.value.scene.imageryLayers.addImageryProvider(
         new MVTProvider({
           url:
             'https://a.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token={k}',
           key:
-            'pk.eyJ1IjoibWFyc2dpcyIsImEiOiJja2Fod2xlanIwNjJzMnhvMXBkMnNqcjVpIn0.WnxikCaN2KV_zn9tLZO77A'
-        })
-      )
-    },
-    addRightMenu () {
-      new RightMenu(this.mapInstance).setMenu([
+            'pk.eyJ1IjoibWFyc2dpcyIsImEiOiJja2Fod2xlanIwNjJzMnhvMXBkMnNqcjVpIn0.WnxikCaN2KV_zn9tLZO77A',
+        }),
+      );
+    };
+    const addRightMenu = () => {
+      new RightMenu(mapInstance.value).setMenu([
         {
           id: 'menu-1',
           text: '菜单1',
           cb: (e) => {
-            alert(e)
-          }
-        }
-      ])
-    },
-    addWaterAnimation () {
+            alert(e);
+          },
+        },
+      ]);
+    };
+    const doWaterAnimation = () => {
       addWaterAnimation(
         [
           114.49,
@@ -233,40 +230,58 @@ export default {
           0,
           114.49,
           31.43,
-          0
+          0,
         ],
-        this.mapInstance
-      )
-      this.setCenter({
+        mapInstance.value,
+      );
+      setCenter({
         x: 114.5985634205044,
         y: 32.43079913513041,
-        z: 1000000
-      })
-    },
-    add3DTiles () {
+        z: 1000000,
+      });
+    };
+    const do3DTiles = () => {
       add3DTiles(
         'http://resource.dvgis.cn/data/3dtiles/ljz/tileset.json',
-        this.mapInstance
-      )
-    },
-    addFire () {
-      this.setCenter({
+        mapInstance.value,
+      );
+    };
+    const addFire = () => {
+      setCenter({
         x: 114.389,
         y: 30.67,
-        z: 800
-      })
-      const fire = new Fire(this.mapInstance)
+        z: 800,
+      });
+      const fire = new Fire(mapInstance.value);
       fire.start({
         x: 114.389,
         y: 30.67,
-        z: 0
-      })
-    },
-    addPostStage () {
-      const postStageMangner = new PostStageMangner(this.mapInstance)
-      postStageMangner.show()
-    }
-  }
-}
+        z: 0,
+      });
+    };
+    const addPostStage = () => {
+      const postStageMangner = new PostStageMangner(mapInstance.value);
+      postStageMangner.show();
+    };
+    return {
+      keyBoard,
+      isEyeMapShow,
+      addPostStage,
+      addFire,
+      do3DTiles,
+      doWaterAnimation,
+      addRightMenu,
+      addMvt,
+      addEyeMap,
+      removeKeyBoard,
+      addKeyBoard,
+      addViewShed,
+      addGifLayer,
+      addClusterLayer,
+      doAnimationStraightLine,
+      doAnimationLine,
+    };
+  },
+};
 </script>
 <style scoped></style>

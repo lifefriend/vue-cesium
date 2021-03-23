@@ -1,4 +1,4 @@
-import * as Cesium from 'cesium'
+import * as Cesium from 'cesium';
 
 export class ViewShed {
    enabled = true;
@@ -7,27 +7,27 @@ export class ViewShed {
 
    softShadows = false;
 
-   constructor (options) {
-     this.viewer = options.viewer
-     this.viewPosition = options.viewPosition
-     this.direction = options.direction % 360
-     this.pitch = options.pitch
-     this.horizontalViewAngle = options.horizontalViewAngle || 90
-     this.verticalViewAngle = options.verticalViewAngle || 60
-     this.visibleAreaColor = options.visibleAreaColor || Cesium.Color.GREEN
-     this.invisibleAreaColor = options.invisibleAreaColor || Cesium.Color.RED
-     this.visualRange = options.visualRange || 100
-     this.updateViewShed()
+   constructor(options) {
+     this.viewer = options.viewer;
+     this.viewPosition = options.viewPosition;
+     this.direction = options.direction % 360;
+     this.pitch = options.pitch;
+     this.horizontalViewAngle = options.horizontalViewAngle || 90;
+     this.verticalViewAngle = options.verticalViewAngle || 60;
+     this.visibleAreaColor = options.visibleAreaColor || Cesium.Color.GREEN;
+     this.invisibleAreaColor = options.invisibleAreaColor || Cesium.Color.RED;
+     this.visualRange = options.visualRange || 100;
+     this.updateViewShed();
    }
 
-   createLightCamera () {
-     this.lightCamera = new Cesium.Camera(this.viewer.scene)
-     this.lightCamera.position = this.viewPosition
+   createLightCamera() {
+     this.lightCamera = new Cesium.Camera(this.viewer.scene);
+     this.lightCamera.position = this.viewPosition;
    }
 
    // 以自定义相机为点光源，声明自定义shadowmap
    // 注意:虽然cesium并不建议修改shadowMap，但是必须将当前场景里的shadowMap替换为自定义的shadowMap，才能得到正确的参数。
-   createShadowMap () {
+   createShadowMap() {
      this.shadowMap = new Cesium.ShadowMap({
        context: (this.viewer.scene).context,
        lightCamera: this.lightCamera,
@@ -38,136 +38,136 @@ export class ViewShed {
        size: this.size,
        softShadows: this.softShadows,
        normalOffset: false,
-       fromLightSource: false
-     })
-     this.viewer.scene.shadowMap = this.shadowMap
-     this.viewer.scene.globe.shadows = Cesium.ShadowMode.ENABLED
-     this.viewer.scene.globe.depthTestAgainstTerrain = true
+       fromLightSource: false,
+     });
+     this.viewer.scene.shadowMap = this.shadowMap;
+     this.viewer.scene.globe.shadows = Cesium.ShadowMode.ENABLED;
+     this.viewer.scene.globe.depthTestAgainstTerrain = true;
    }
 
-   updateViewShed () {
-     this.clear()
-     this.createLightCamera()
-     this.setCameraParams()
-     this.createShadowMap()
+   updateViewShed() {
+     this.clear();
+     this.createLightCamera();
+     this.setCameraParams();
+     this.createShadowMap();
 
-     this.createPostStage()
-     this.drawViewCentrum()
+     this.createPostStage();
+     this.drawViewCentrum();
    }
 
    // 视锥体
-   drawViewCentrum () {
-     const scratchRight = new Cesium.Cartesian3()
-     const scratchRotation = new Cesium.Matrix3()
-     const scratchOrientation = new Cesium.Quaternion()
-     const direction = this.lightCamera.directionWC
-     const up = this.lightCamera.upWC
-     let right = this.lightCamera.rightWC
-     right = Cesium.Cartesian3.negate(right, scratchRight)
+   drawViewCentrum() {
+     const scratchRight = new Cesium.Cartesian3();
+     const scratchRotation = new Cesium.Matrix3();
+     const scratchOrientation = new Cesium.Quaternion();
+     const direction = this.lightCamera.directionWC;
+     const up = this.lightCamera.upWC;
+     let right = this.lightCamera.rightWC;
+     right = Cesium.Cartesian3.negate(right, scratchRight);
 
-     const rotation = scratchRotation
-     Cesium.Matrix3.setColumn(rotation, 0, right, rotation)
-     Cesium.Matrix3.setColumn(rotation, 1, up, rotation)
-     Cesium.Matrix3.setColumn(rotation, 2, direction, rotation)
+     const rotation = scratchRotation;
+     Cesium.Matrix3.setColumn(rotation, 0, right, rotation);
+     Cesium.Matrix3.setColumn(rotation, 1, up, rotation);
+     Cesium.Matrix3.setColumn(rotation, 2, direction, rotation);
 
      const orientation = Cesium.Quaternion.fromRotationMatrix(
        rotation,
-       scratchOrientation
-     )
+       scratchOrientation,
+     );
      const instanceOutline = new Cesium.GeometryInstance({
        geometry: new Cesium.FrustumOutlineGeometry({
          frustum: this.lightCamera.frustum,
          origin: this.viewPosition,
-         orientation
+         orientation,
        }),
        id: `pri${this.viewer.scene.primitives.length + 1}`,
        attributes: {
          color: Cesium.ColorGeometryInstanceAttribute.fromColor(
-           new Cesium.Color(0.0, 1.0, 0.0, 1.0)
+           new Cesium.Color(0.0, 1.0, 0.0, 1.0),
          ),
-         show: new Cesium.ShowGeometryInstanceAttribute(true)
-       }
-     })
+         show: new Cesium.ShowGeometryInstanceAttribute(true),
+       },
+     });
      this.newPrimitive = this.viewer.scene.primitives.add(
        new Cesium.Primitive({
          geometryInstances: instanceOutline,
          appearance: new Cesium.PerInstanceColorAppearance({
-           flat: true
-         })
-       })
-     )
+           flat: true,
+         }),
+       }),
+     );
    }
 
    // 在观察点自定义相机，设置相机的可视椎体范围，方向
-   setCameraParams () {
-     this.lightCamera.frustum.near = 0.001 * this.visualRange
-     this.lightCamera.frustum.far = this.visualRange
-     this.lightCamera.frustum.fov = Cesium.Math.toRadians(Math.max(this.horizontalViewAngle, this.verticalViewAngle))
-     this.lightCamera.frustum.aspectRatio = this.horizontalViewAngle / this.verticalViewAngle
+   setCameraParams() {
+     this.lightCamera.frustum.near = 0.001 * this.visualRange;
+     this.lightCamera.frustum.far = this.visualRange;
+     this.lightCamera.frustum.fov = Cesium.Math.toRadians(Math.max(this.horizontalViewAngle, this.verticalViewAngle));
+     this.lightCamera.frustum.aspectRatio = this.horizontalViewAngle / this.verticalViewAngle;
      this.lightCamera.setView({
        destination: this.viewPosition,
        orientation: {
          heading: Cesium.Math.toRadians(this.direction || 0),
          pitch: Cesium.Math.toRadians(this.pitch || 0),
-         roll: 0
-       }
-     })
+         roll: 0,
+       },
+     });
    }
 
-   clear () {
+   clear() {
      // 椭球体
      if (this.pyramid) {
-       this.viewer.entities.removeById(this.pyramid.id)
-       this.pyramid = null
+       this.viewer.entities.removeById(this.pyramid.id);
+       this.pyramid = null;
      }
 
      if (this.cameraPrimitive) {
-       this.cameraPrimitive.destroy()
-       this.cameraPrimitive = null
+       this.cameraPrimitive.destroy();
+       this.cameraPrimitive = null;
      }
      // 煊染结果
      if (this.postStage) {
-       this.viewer.scene.postProcessStages.remove(this.postStage)
-       this.postStage = null
+       this.viewer.scene.postProcessStages.remove(this.postStage);
+       this.postStage = null;
      }
 
      // 视锥体
      if (this.newPrimitive) {
-       this.viewer.scene.primitives.remove(this.newPrimitive)
-       this.newPrimitive = null
+       this.viewer.scene.primitives.remove(this.newPrimitive);
+       this.newPrimitive = null;
      }
    }
 
-   setDirection (direction) {
-     this.direction = direction % 360
-     this.updateViewShed()
+   setDirection(direction) {
+     this.direction = direction % 360;
+     this.updateViewShed();
    }
 
-   setPitch (pitch) {
-     this.pitch = pitch
-     this.updateViewShed()
+   setPitch(pitch) {
+     this.pitch = pitch;
+     this.updateViewShed();
    }
 
-   setDirectionDistancePitch (direction, distance, pitch) {
-     this.direction = direction % 360
-     this.visualRange = distance
-     this.pitch = pitch
-     this.updateViewShed()
+   setDirectionDistancePitch(direction, distance, pitch) {
+     this.direction = direction % 360;
+     this.visualRange = distance;
+     this.pitch = pitch;
+     this.updateViewShed();
    }
 
-   setVisualRange (visualRange) {
-     this.visualRange = visualRange
-     this.updateViewShed()
+   setVisualRange(visualRange) {
+     this.visualRange = visualRange;
+     this.updateViewShed();
    }
 
-   setHorizontalViewAngle (hva) {
-     this.horizontalViewAngle = hva
-     this.updateViewShed()
+   setHorizontalViewAngle(hva) {
+     this.horizontalViewAngle = hva;
+     this.updateViewShed();
    }
 
-   setVerticalViewAngle (vva) {
-     this.verticalViewAngle = vva
-     this.updateViewShed()
+   setVerticalViewAngle(vva) {
+     this.verticalViewAngle = vva;
+     this.updateViewShed();
    }
 
    // 根据shadowMap中的数据，实现自定义shader
@@ -176,7 +176,7 @@ export class ViewShed {
       如果要解决锯齿等问题，需要设置softShadows 、normalOffset 等，相应的glsl代码可以在源码Source\Scene\ShadowMapShader.js寻找；
       如果要实现可视区域、不可视区域颜色自由改变，只需要将v_color与inv_color两个变量改为外部传入就可以了。
     */
-   createPostStage () {
+   createPostStage() {
      const fs = `
     #define USE_CUBE_MAP_SHADOW true
     uniform sampler2D colorTexture;
@@ -313,7 +313,7 @@ export class ViewShed {
           }
         }
       }
-    }`
+    }`;
      const postStage = new Cesium.PostProcessStage({
        fragmentShader: fs,
        uniforms: {
@@ -321,46 +321,46 @@ export class ViewShed {
          camera_view_matrix: this.lightCamera.viewMatrix,
          far: () => this.visualRange,
          shadowMap_textureCube: () => {
-           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'))
-           return Reflect.get(this.shadowMap, '_shadowMapTexture')
+           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'));
+           return Reflect.get(this.shadowMap, '_shadowMapTexture');
          },
          shadowMap_matrix: () => {
-           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'))
-           return Reflect.get(this.shadowMap, '_shadowMapMatrix')
+           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'));
+           return Reflect.get(this.shadowMap, '_shadowMapMatrix');
          },
          shadowMap_lightPositionEC: () => {
-           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'))
-           return Reflect.get(this.shadowMap, '_lightPositionEC')
+           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'));
+           return Reflect.get(this.shadowMap, '_lightPositionEC');
          },
          shadowMap_normalOffsetScaleDistanceMaxDistanceAndDarkness: () => {
-           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'))
-           const bias = this.shadowMap._pointBias
+           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'));
+           const bias = this.shadowMap._pointBias;
            return Cesium.Cartesian4.fromElements(
              bias.normalOffsetScale,
              this.shadowMap._distance,
              this.shadowMap.maximumDistance,
              0.0,
-             new Cesium.Cartesian4()
-           )
+             new Cesium.Cartesian4(),
+           );
          },
          shadowMap_texelSizeDepthBiasAndNormalShadingSmooth: () => {
-           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'))
-           const bias = this.shadowMap._pointBias
-           const scratchTexelStepSize = new Cesium.Cartesian2()
-           const texelStepSize = scratchTexelStepSize
-           texelStepSize.x = 1.0 / this.shadowMap._textureSize.x
-           texelStepSize.y = 1.0 / this.shadowMap._textureSize.y
+           this.shadowMap.update(Reflect.get(this.viewer.scene, '_frameState'));
+           const bias = this.shadowMap._pointBias;
+           const scratchTexelStepSize = new Cesium.Cartesian2();
+           const texelStepSize = scratchTexelStepSize;
+           texelStepSize.x = 1.0 / this.shadowMap._textureSize.x;
+           texelStepSize.y = 1.0 / this.shadowMap._textureSize.y;
 
            return Cesium.Cartesian4.fromElements(
              texelStepSize.x,
              texelStepSize.y,
              bias.depthBias,
              bias.normalShadingSmooth,
-             new Cesium.Cartesian4()
-           )
-         }
-       }
-     })
-     this.postStage = this.viewer.scene.postProcessStages.add(postStage)
+             new Cesium.Cartesian4(),
+           );
+         },
+       },
+     });
+     this.postStage = this.viewer.scene.postProcessStages.add(postStage);
    }
 }
