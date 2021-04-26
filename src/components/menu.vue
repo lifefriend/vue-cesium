@@ -52,6 +52,9 @@
         <li class="nav-item" @click="addPostStage">
           <a class="nav-link" href="#">下雨</a>
         </li>
+        <li class="nav-item" @click="showViewerSync">
+          <a class="nav-link" href="#">双屏</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -60,6 +63,8 @@
 <script>
 import { useStore } from 'vuex';
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
 import * as Cesium from 'cesium';
 import BaseMap from './baseMap.vue';
 import Measure from './measure.vue';
@@ -85,6 +90,7 @@ export default {
     measure: Measure,
   },
   setup() {
+    const router = useRouter();
     const keyBoard = ref(false);
     const keyBoardControl = ref(null);
     const isEyeMapShow = ref(false);
@@ -263,6 +269,10 @@ export default {
       const postStageMangner = new PostStageMangner(mapInstance.value);
       postStageMangner.show();
     };
+    const showViewerSync = () => {
+      router.push('/viewersync');
+    };
+
     return {
       keyBoard,
       isEyeMapShow,
@@ -280,6 +290,7 @@ export default {
       addClusterLayer,
       doAnimationStraightLine,
       doAnimationLine,
+      showViewerSync,
     };
   },
 };

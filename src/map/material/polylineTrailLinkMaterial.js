@@ -15,15 +15,17 @@ export class PolylineTrailLinkMaterialProperty {
   init() {
     Cesium.Material.PolylineTrailLinkType = 'PolylineTrailLink';
     Cesium.Material.PolylineTrailLinkImage = materialPng;
-    Cesium.Material.PolylineTrailLinkSource = 'czm_material czm_getMaterial(czm_materialInput materialInput)\n\
-                                                 {\n\
-                                                      czm_material material = czm_getDefaultMaterial(materialInput);\n\
-                                                      vec2 st = materialInput.st;\n\
-                                                      vec4 colorImage = texture2D(image, vec2(fract(st.s - time), st.t));\n\
-                                                      material.alpha = colorImage.a * color.a;\n\
-                                                      material.diffuse = (colorImage.rgb+color.rgb)/2.0;\n\
-                                                      return material;\n\
-                                                  }';
+    Cesium.Material.PolylineTrailLinkSource = `
+      czm_material czm_getMaterial(czm_materialInput materialInput)
+      {
+         czm_material material = czm_getDefaultMaterial(materialInput);
+         vec2 st = materialInput.st;
+         vec4 colorImage = texture2D(image, vec2(fract(st.s - time), st.t));
+         material.alpha = colorImage.a * color.a;
+         material.diffuse = (colorImage.rgb+color.rgb)/2.0;
+         return material;
+      }
+    `;
     Cesium.Material._materialCache.addMaterial(Cesium.Material.PolylineTrailLinkType, {
       fabric: {
         type: Cesium.Material.PolylineTrailLinkType,
