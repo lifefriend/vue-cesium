@@ -18,7 +18,6 @@ const syncHandler = {
         url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       }),
     });
-    this.viewer1._cesiumWidget._creditContainer.style.display = 'none';
   },
   initViewer2(e) {
     this.viewer2 = new Cesium.Viewer(e, {
@@ -37,7 +36,6 @@ const syncHandler = {
         url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       }),
     });
-    this.viewer2._cesiumWidget._creditContainer.style.display = 'none';
   },
   setView() {
     const e = {
@@ -63,6 +61,7 @@ const syncHandler = {
     this.viewer2.destroy();
   },
 };
+
 class SyncViewer {
   constructor(i, t) {
     this.viewer1 = i;

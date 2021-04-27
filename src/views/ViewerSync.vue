@@ -12,10 +12,7 @@
 <script>
 import 'cesium/Source/Widgets/widgets.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import {
-  nextTick,
-  onMounted,
-} from 'vue';
+import { nextTick, onMounted } from 'vue';
 import { syncHandler, SyncViewer } from '../map/viewerSync';
 
 export default {
