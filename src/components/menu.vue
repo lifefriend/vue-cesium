@@ -55,6 +55,9 @@
         <li class="nav-item" @click="showViewerSync">
           <a class="nav-link" href="#">双屏</a>
         </li>
+        <li class="nav-item" @click="showDynamicLabel">
+          <a class="nav-link" href="#">动态标记</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -83,6 +86,7 @@ import MVTProvider from '../map/provider/mvtProvider';
 import RightMenu from '../map/rightMenu';
 import Fire from '../map/particleSystem/fire';
 import PostStageMangner from '../map/postStage';
+import DynamicLabel from '../map/dynamicLabel';
 
 export default {
   components: {
@@ -272,6 +276,34 @@ export default {
     const showViewerSync = () => {
       router.push('/viewersync');
     };
+    const showDynamicLabel = () => {
+      const arr = [
+        {
+          position: [121.47176626434644, 31.226931885308268, 10],
+          name: '国雅大厦',
+        },
+        {
+          position: [121.48231424363982, 31.23191186890701, 9],
+          name: '尚都国际中心',
+        },
+        {
+          position: [121.47280527917779, 31.234259150465007, 11],
+          name: '和乔大厦Ａ座',
+        },
+        {
+          position: [121.48405222060568, 31.237829365433115, 12],
+          name: '中国农业博物馆',
+        },
+      ];
+      arr.forEach((e) => {
+        new DynamicLabel(mapInstance.value, e.position, e.name);
+      });
+      setCenter({
+        x: 121.47176626434644,
+        y: 31.226931885308268,
+        z: 5000,
+      });
+    };
 
     return {
       keyBoard,
@@ -291,6 +323,7 @@ export default {
       doAnimationStraightLine,
       doAnimationLine,
       showViewerSync,
+      showDynamicLabel,
     };
   },
 };

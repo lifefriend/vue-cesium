@@ -27,5 +27,6 @@ module.exports = {
     'no-alert': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'class-methods-use-this': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'prefer-spread': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-new': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
   },
 };
