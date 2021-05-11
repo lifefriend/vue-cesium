@@ -1,8 +1,7 @@
 <!-- 菜单栏 -->
 <template>
   <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <base-map />
@@ -55,11 +54,26 @@
         <li class="nav-item" @click="showViewerSync">
           <a class="nav-link" href="#">双屏</a>
         </li>
+      </ul>
+    </div>
+  </nav>
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
         <li class="nav-item" @click="showDynamicLabel">
           <a class="nav-link" href="#">动态标记</a>
         </li>
+        <li class="nav-item" @click="showBounceMarker">
+          <a class="nav-link" href="#">弹跳点动画</a>
+        </li>
+        <!-- <li class="nav-item" @click="reShowBounceMarker">
+          <a class="nav-link" href="#">repaly</a>
+        </li>
+        <li class="nav-item" @click="showExtent">
+          <a class="nav-link" href="#">获取范围</a>
+        </li>-->
       </ul>
-    </div>
+     </div>
   </nav>
 </template>
 
@@ -87,6 +101,8 @@ import RightMenu from '../map/rightMenu';
 import Fire from '../map/particleSystem/fire';
 import PostStageMangner from '../map/postStage';
 import DynamicLabel from '../map/dynamicLabel';
+import BounceMarker, { initEvent } from '../map/bounceMarker';
+import { getCenter } from '../map/utils/common';
 
 export default {
   components: {
@@ -100,19 +116,12 @@ export default {
     const isEyeMapShow = ref(false);
     const store = useStore();
     const mapInstance = computed(() => store.getters.mapInstance);
-    const setCenter = (xyz) => {
-      mapInstance.value.camera.setView({
-        destination: Cesium.Cartesian3.fromDegrees(
-          xyz.x,
-          xyz.y,
-          xyz.z || 50000,
-        ), // 设置位置
-        orientation: {
-          heading: Cesium.Math.toRadians(0), // 方向
-          pitch: Cesium.Math.toRadians(-90), // 倾斜角度
-          roll: Cesium.Math.toRadians(0),
-        },
-      });
+    const setCenter = (xyz, opt = {
+      heading: 0,
+      pitch: -90,
+      roll: 0,
+    }) => {
+      mapInstance.value.camera.lookAt(Cesium.Cartesian3.fromDegrees(xyz.x, xyz.y), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(opt.heading), Cesium.Math.toRadians(opt.pitch), xyz.z || 50000));
     };
     const doAnimationLine = () => {
       if (mapInstance.value) {
@@ -304,6 +313,47 @@ export default {
         z: 5000,
       });
     };
+    const bMarkers = [];
+    const showBounceMarker = () => {
+      setCenter({
+        x: 121.47861530566308,
+        y: 31.243450391594713,
+        z: 5000,
+      }, {
+        heading: 0,
+        pitch: -30,
+        roll: 0,
+      });
+      const arr = [
+        {
+          position: [121.47176626434644, 31.226931885308268, -1],
+        },
+        {
+          position: [121.47280527917779, 31.234259150465007, -2],
+        },
+        {
+          position: [121.48231424363982, 31.23191186890701, -3],
+        },
+        {
+          position: [121.48405222060568, 31.237829365433115, -4],
+        },
+      ];
+      arr.forEach((e) => {
+        const f = new BounceMarker(mapInstance.value, e.position);
+        bMarkers.push(f);
+      });
+      initEvent(mapInstance.value);
+    };
+    const reShowBounceMarker = () => {
+      bMarkers.forEach((e) => {
+        e.remove();
+      });
+      showBounceMarker();
+    };
+    const showExtent = () => {
+      const center = getCenter(mapInstance.value);
+      console.log('extent', center);
+    };
 
     return {
       keyBoard,
@@ -324,6 +374,9 @@ export default {
       doAnimationLine,
       showViewerSync,
       showDynamicLabel,
+      showBounceMarker,
+      reShowBounceMarker,
+      showExtent,
     };
   },
 };

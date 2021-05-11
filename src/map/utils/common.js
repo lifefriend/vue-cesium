@@ -4,10 +4,10 @@ export function getLinkedPointList(e, t, i, r) {
   const n = [];
   const o = Cesium.Cartographic.fromCartesian(e);
   const a = Cesium.Cartographic.fromCartesian(t);
-  const s = 180 * o.longitude / Math.PI;
-  const l = 180 * o.latitude / Math.PI;
-  const u = 180 * a.longitude / Math.PI;
-  const c = 180 * a.latitude / Math.PI;
+  const s = (180 * o.longitude) / Math.PI;
+  const l = (180 * o.latitude) / Math.PI;
+  const u = (180 * a.longitude) / Math.PI;
+  const c = (180 * a.latitude) / Math.PI;
   const h = Math.sqrt((s - u) * (s - u) + (l - c) * (l - c));
   const d = h * i;
   const f = Cesium.Cartesian3.clone(e);
@@ -20,7 +20,7 @@ export function getLinkedPointList(e, t, i, r) {
   const v = Cesium.Cartesian3.angleBetween(f, p);
   n.push(e);
   for (let y = 1; y < r - 1; y++) {
-    const _ = 1 * y / (r - 1);
+    const _ = (1 * y) / (r - 1);
     const w = 1 - _;
     const b = Math.sin(w * v) / Math.sin(v);
     const C = Math.sin(_ * v) / Math.sin(v);
@@ -55,7 +55,10 @@ export function getLonLat(viewer, cartesian) {
   return pos;
 }
 export function getAngle(pntFirst, pntNext) {
-  let dRotateAngle = Math.atan2(Math.abs(pntFirst.lon - pntNext.lon), Math.abs(pntFirst.lat - pntNext.lat));
+  let dRotateAngle = Math.atan2(
+    Math.abs(pntFirst.lon - pntNext.lon),
+    Math.abs(pntFirst.lat - pntNext.lat),
+  );
   if (pntNext.lon >= pntFirst.lon) {
     if (pntNext.lat >= pntFirst.lat) {
       //
@@ -67,7 +70,7 @@ export function getAngle(pntFirst, pntNext) {
   } else {
     dRotateAngle = Math.PI + dRotateAngle;
   }
-  dRotateAngle = dRotateAngle * 180 / Math.PI;
+  dRotateAngle = (dRotateAngle * 180) / Math.PI;
   return dRotateAngle;
 }
 export function getSrcElement(e) {
@@ -77,4 +80,25 @@ export function getSrcElement(e) {
 }
 export function getLength(firstPoint, secondPoint) {
   return Cesium.Cartesian3.distance(firstPoint, secondPoint);
+}
+export function setExtent(rectangle, opt = {}, viewer) {
+  viewer.camera.flyTo({
+    destination: rectangle,
+    orientation: {
+      heading: Cesium.Math.toRadians(opt.heading || 0), // 方向
+      pitch: Cesium.Math.toRadians(opt.pitch || -90), // 倾斜角度
+      roll: Cesium.Math.toRadians(opt.roll || 0),
+    },
+  });
+}
+export function getCenter(viewer) {
+  // 中心点位置
+  const rectangle = viewer.camera.computeViewRectangle();
+  const west = rectangle.west / Math.PI * 180;
+  const north = rectangle.north / Math.PI * 180;
+  const east = rectangle.east / Math.PI * 180;
+  const south = rectangle.south / Math.PI * 180;
+  const centerx = (west + east) / 2;
+  const centery = (north + south) / 2;
+  return [centerx, centery];
 }
