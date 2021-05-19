@@ -72,6 +72,9 @@
         <li class="nav-item" @click="showExtent">
           <a class="nav-link" href="#">获取范围</a>
         </li>-->
+        <li class="nav-item" @click="addAnimationWall">
+          <a class="nav-link" href="#">动态墙</a>
+        </li>
       </ul>
      </div>
   </nav>
@@ -103,6 +106,7 @@ import PostStageMangner from '../map/postStage';
 import DynamicLabel from '../map/dynamicLabel';
 import BounceMarker, { initEvent } from '../map/bounceMarker';
 import { getCenter } from '../map/utils/common';
+import AnimationWall from '../map/animationWall';
 
 export default {
   components: {
@@ -354,6 +358,44 @@ export default {
       const center = getCenter(mapInstance.value);
       console.log('extent', center);
     };
+    const addAnimationWall = () => {
+      new AnimationWall(mapInstance.value).add([
+        120.79579364922108, 31.41897182222492,
+        120.79514640830746, 31.413416233367496,
+        120.80014457845661, 31.409758233570173,
+        120.80209040697119, 31.4057337132493,
+        120.80029764615955, 31.40018476234912,
+        120.79461591180647, 31.393602298131494,
+        120.80156004258437, 31.373752923140046,
+        120.81530979532509, 31.376170803746234,
+        120.81799402128613, 31.369903794337265,
+        120.82176135960087, 31.36679674875513,
+        120.82593532700473, 31.366541207705012,
+        120.83103046449061, 31.3692834055125,
+        120.83358860960048, 31.372351098711572,
+        120.83719814240608, 31.376592616157275,
+        120.84249512848864, 31.378757567597003,
+        120.84384209946673, 31.38311264607813,
+        120.83986623598962, 31.386877926326456,
+        120.84389196467293, 31.395675136605373,
+        120.84824026431292, 31.401305169421832,
+        120.84736455536907, 31.40786016415259,
+        120.845392713477, 31.41314556194053,
+        120.84634518993951, 31.417009174294737,
+        120.84473492552534, 31.420086883959744,
+        120.84294781929464, 31.422998359692404,
+        120.79579364922108, 31.41897182222492,
+      ]);
+      setCenter({
+        x: 120.82824026431292,
+        y: 31.401305169421832,
+        z: 10000,
+      }, {
+        heading: 0,
+        pitch: -30,
+        roll: 0,
+      });
+    };
 
     return {
       keyBoard,
@@ -377,6 +419,7 @@ export default {
       showBounceMarker,
       reShowBounceMarker,
       showExtent,
+      addAnimationWall,
     };
   },
 };
