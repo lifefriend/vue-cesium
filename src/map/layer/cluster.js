@@ -1,4 +1,5 @@
 import * as Cesium from 'cesium';
+import markerFile from './cluster.png';
 
 export default class ClusterLayer {
   constructor(viewer) {
@@ -26,10 +27,19 @@ export default class ClusterLayer {
     const { x, y, z } = poi;
     const entity = new Cesium.Entity({
       position: Cesium.Cartesian3.fromDegrees(x, y, z),
-      point: {
-        pixelSize: 10,
-        color: Cesium.Color.BLUE,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      // point: {
+      //   pixelSize: 10,
+      //   color: Cesium.Color.BLUE,
+      //   disableDepthTestDistance: Number.POSITIVE_INFINITY,
+      // },
+      billboard: {
+        width: 58, // 必需，否则初始化时会全部显示图标
+        height: 74, // 必需，否则初始化时会全部显示图标
+        image: markerFile,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+        scaleByDistance: new Cesium.NearFarScalar(0, 0, 1, 1),
+        pixelOffsetScaleByDistance: new Cesium.NearFarScalar(0, 0, 1, 1),
       },
     });
     return entity;
