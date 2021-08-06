@@ -2,16 +2,16 @@ import * as Cesium from 'cesium';
 import mark from './bounceMarker.png';
 
 class BounceMarker {
-  constructor(viewer, [lng, lat, height], opts) {
+  constructor(viewer, [lng, lat, height], opts = {
+    image: mark,
+    bounceHeight: 100,
+    increment: 0.05,
+  }) {
     this.viewer = viewer;
     this.lng = lng;
     this.lat = lat;
     this.height = height;
-    this.opts = opts || {
-      image: mark,
-      bounceHeight: 100,
-      increment: 0.05,
-    };
+    this.opts = opts;
     this.add();
   }
 
