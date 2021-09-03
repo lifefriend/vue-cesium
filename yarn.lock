@@ -954,6 +954,11 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@open-wc/webpack-import-meta-loader@^0.4.7":
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/@open-wc/webpack-import-meta-loader/-/webpack-import-meta-loader-0.4.7.tgz#d8212640a386a66bf06a2a4c101936467839b5a1"
+  integrity sha512-F3d1EHRckk2+ZpgEEAgVITp8BU9DYLBhKOhNMREeQ1BwILRIhrt+V1bebpnd0Mz595jzd7Yh1wSibLsXibkCpg==
+
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.8.0"
   resolved "https://registry.npm.taobao.org/@soda/friendly-errors-webpack-plugin/download/@soda/friendly-errors-webpack-plugin-1.8.0.tgz?cache=0&sync_timestamp=1607927418007&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40soda%2Ffriendly-errors-webpack-plugin%2Fdownload%2F%40soda%2Ffriendly-errors-webpack-plugin-1.8.0.tgz#84751d82a93019d5c92c0cf0e45ac59087cd2240"
@@ -2648,10 +2653,10 @@ center-align@^0.1.1:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
 
-cesium@^1.79.1:
-  version "1.79.1"
-  resolved "https://registry.npm.taobao.org/cesium/download/cesium-1.79.1.tgz#571988bd75093dc01a674db7dadf6222e8499f69"
-  integrity sha1-VxmIvXUJPcAaZ0232t9iIuhJn2k=
+cesium@^1.85.0:
+  version "1.85.0"
+  resolved "https://registry.yarnpkg.com/cesium/-/cesium-1.85.0.tgz#00d983648710f13a925c20504548879eac38e902"
+  integrity sha512-GqcEkcG5owC7rDroZzy3ic9d5oCrpqmpLZ9kWVnVBgvtjL/aAS+eUZ2wz8vCYAcYW77wYnIWeBRbMbaqdAH2XQ==
 
 chainsaw@~0.1.0:
   version "0.1.0"

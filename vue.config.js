@@ -36,6 +36,14 @@ module.exports = {
     ],
     module: {
       unknownContextCritical: false,
+      rules: [
+        {
+          test: /\.js$/,
+          use: {
+            loader: '@open-wc/webpack-import-meta-loader',
+          },
+        },
+      ],
     },
   },
   devServer: {
