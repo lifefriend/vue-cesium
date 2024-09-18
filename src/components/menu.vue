@@ -75,6 +75,9 @@
         <li class="nav-item" @click="addAnimationWall">
           <a class="nav-link" href="#">动态墙</a>
         </li>
+        <li class="nav-item" @click="doAnimation1">
+          <a class="nav-link" href="#">动效1</a>
+        </li>
       </ul>
      </div>
   </nav>
@@ -93,6 +96,7 @@ import {
   addAnimationStraightLine,
   addWaterAnimation,
   add3DTiles,
+  animation1,
 } from '../map';
 import ClusterLayer from '../map/layer/cluster';
 import OverLayer from '../map/layer/overlay';
@@ -265,7 +269,8 @@ export default {
     };
     const do3DTiles = () => {
       add3DTiles(
-        'http://resource.dvgis.cn/data/3dtiles/ljz/tileset.json',
+        // 'http://resource.dvgis.cn/data/3dtiles/ljz/tileset.json',
+        '/data/3dtiles/shanghai/tileset.json',
         mapInstance.value,
       );
     };
@@ -397,6 +402,10 @@ export default {
       });
     };
 
+    const doAnimation1 = () => {
+      animation1(mapInstance.value);
+    };
+
     return {
       keyBoard,
       isEyeMapShow,
@@ -420,6 +429,7 @@ export default {
       reShowBounceMarker,
       showExtent,
       addAnimationWall,
+      doAnimation1,
     };
   },
 };

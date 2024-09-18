@@ -66,7 +66,9 @@ export function addWaterAnimation(coordinates, viewer) {
     show: true,
     geometryInstances: new Cesium.GeometryInstance({
       geometry: new Cesium.PolygonGeometry({
-        polygonHierarchy: new Cesium.PolygonHierarchy(Cesium.Cartesian3.fromDegreesArrayHeights(coordinates)),
+        polygonHierarchy: new Cesium.PolygonHierarchy(
+          Cesium.Cartesian3.fromDegreesArrayHeights(coordinates),
+        ),
         vertexFormat: Cesium.EllipsoidSurfaceAppearance.VERTEX_FORMAT,
         extrudedHeight: 0, // 只显示水面
         height: 0,
@@ -86,31 +88,32 @@ export function addWaterAnimation(coordinates, viewer) {
         },
       }),
       // 水透明化
-      fragmentShaderSource: 'varying vec3 v_positionMC;\n'
-      + 'varying vec3 v_positionEC;\n'
-      + 'varying vec2 v_st;\n'
-      + 'void main()\n'
-      + '{\n'
-      + 'czm_materialInput materialInput;\n'
-      + 'vec3 normalEC = normalize(czm_normal3D * czm_geodeticSurfaceNormal(v_positionMC, vec3(0.0), vec3(1.0)));\n'
-      + '#ifdef FACE_FORWARD\n'
-      + 'normalEC = faceforward(normalEC, vec3(0.0, 0.0, 1.0), -normalEC);\n'
-      + '#endif\n'
-      + 'materialInput.s = v_st.s;\n'
-      + 'materialInput.st = v_st;\n'
-      + 'materialInput.str = vec3(v_st, 0.0);\n'
-      + 'materialInput.normalEC = normalEC;\n'
-      + 'materialInput.tangentToEyeMatrix = czm_eastNorthUpToEyeCoordinates(v_positionMC, materialInput.normalEC);\n'
-      + 'vec3 positionToEyeEC = -v_positionEC;\n'
-      + 'materialInput.positionToEyeEC = positionToEyeEC;\n'
-      + 'czm_material material = czm_getMaterial(materialInput);\n'
-      + '#ifdef FLAT\n'
-      + 'gl_FragColor = vec4(material.diffuse + material.emission, material.alpha);\n'
-      + '#else\n'
-      + 'gl_FragColor = czm_phong(normalize(positionToEyeEC), material, czm_lightDirectionEC);\n'
-      + 'gl_FragColor.a=0.85;\n'
-      + '#endif\n'
-      + '}\n',
+      fragmentShaderSource:
+        'varying vec3 v_positionMC;\n'
+        + 'varying vec3 v_positionEC;\n'
+        + 'varying vec2 v_st;\n'
+        + 'void main()\n'
+        + '{\n'
+        + 'czm_materialInput materialInput;\n'
+        + 'vec3 normalEC = normalize(czm_normal3D * czm_geodeticSurfaceNormal(v_positionMC, vec3(0.0), vec3(1.0)));\n'
+        + '#ifdef FACE_FORWARD\n'
+        + 'normalEC = faceforward(normalEC, vec3(0.0, 0.0, 1.0), -normalEC);\n'
+        + '#endif\n'
+        + 'materialInput.s = v_st.s;\n'
+        + 'materialInput.st = v_st;\n'
+        + 'materialInput.str = vec3(v_st, 0.0);\n'
+        + 'materialInput.normalEC = normalEC;\n'
+        + 'materialInput.tangentToEyeMatrix = czm_eastNorthUpToEyeCoordinates(v_positionMC, materialInput.normalEC);\n'
+        + 'vec3 positionToEyeEC = -v_positionEC;\n'
+        + 'materialInput.positionToEyeEC = positionToEyeEC;\n'
+        + 'czm_material material = czm_getMaterial(materialInput);\n'
+        + '#ifdef FLAT\n'
+        + 'gl_FragColor = vec4(material.diffuse + material.emission, material.alpha);\n'
+        + '#else\n'
+        + 'gl_FragColor = czm_phong(normalize(positionToEyeEC), material, czm_lightDirectionEC);\n'
+        + 'gl_FragColor.a=0.85;\n'
+        + '#endif\n'
+        + '}\n',
     }),
   });
   viewer.scene.primitives.add(primitive);
@@ -126,14 +129,11 @@ export function add3DTiles(url, viewer) {
   });
   tileset1.readyPromise.then((tileset) => {
     viewer.scene.primitives.add(tileset);
-    viewer.scene.camera.setView({
-      destination: tileset.boundingSphere.center,
-      orientation: {
-        heading: 0.0,
-        pitch: -0.5,
-        endTransform: Cesium.Matrix4.IDENTITY,
-      },
-    });
+    const r = tileset.boundingSphere.radius;
+    const boundingSphere = new Cesium.BoundingSphere(tileset.boundingSphere.center, r * 0.125);
+    viewer.camera.viewBoundingSphere(boundingSphere, new Cesium.HeadingPitchRange(0, -0.5, 0));
+    viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+
     tileset.style = new Cesium.Cesium3DTileStyle({
       color: 'vec4(0, 0.5, 1.0,1)',
     });
@@ -183,4 +183,60 @@ export function add3DTiles(url, viewer) {
       }
     });
   });
+}
+
+let postProcessStage = null;
+export function removeAnimation(viewer) {
+  if (!postProcessStage) return;
+  viewer.scene.postProcessStages.remove(postProcessStage);
+  postProcessStage = null;
+}
+export function animation1(viewer) {
+  removeAnimation(viewer);
+  viewer.scene.postProcessStages.fxaa.enabled = true;
+  const fragmentShaderSource = `
+          uniform sampler2D colorTexture;
+          varying vec2 v_textureCoordinates;
+
+          vec3 palette( float t ) {
+              vec3 a = vec3(0.5, 0.5, 0.5);
+              vec3 b = vec3(0.5, 0.5, 0.5);
+              vec3 c = vec3(1.0, 1.0, 1.0);
+              vec3 d = vec3(0.263,0.416,0.557);
+
+              return a + b*cos( 6.28318*(c*t+d) );
+          }
+
+          void main()
+          {
+              vec2 iResolution = czm_viewport.zw;
+              float iTime = czm_frameNumber*0.008;
+
+              vec2 uv = (gl_FragCoord.xy * 2.0 - iResolution.xy) / iResolution.y;
+              vec2 uv0 = uv;
+              vec3 finalColor = vec3(0.0);
+              for (float i = 0.0; i < 4.0; i++) {
+                  uv = fract(uv * 1.5) - 0.5;
+                  float d = length(uv) * exp(-length(uv0));
+                  vec3 col = palette(length(uv0) + i*.4 + iTime*.4);
+                  d = sin(d*8. + iTime)/8.;
+                  d = abs(d);
+                  d = pow(0.01 / d, 1.2);
+                  finalColor += col * d;
+              }
+              gl_FragColor = vec4(finalColor, 1.0);
+              // 场景颜色
+              vec4 sceneColor = texture2D(colorTexture, v_textureCoordinates);
+              // 颜色混合-混合场景颜色和当前效果的颜色
+              gl_FragColor = mix(gl_FragColor,sceneColor,0.9);
+  }`;
+
+  postProcessStage = viewer.scene.postProcessStages.add(
+    new Cesium.PostProcessStage({
+      fragmentShader: fragmentShaderSource,
+      uniforms: {
+        // fogColor: Cesium.Color.BLACK,
+      },
+    }),
+  );
 }
