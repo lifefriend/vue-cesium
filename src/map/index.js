@@ -2,7 +2,12 @@ import * as Cesium from 'cesium';
 import { LineFlowMaterialProperty } from './material/polylineLineFlowMaterial';
 import { PolylineTrailLinkMaterialProperty } from './material/polylineTrailLinkMaterial';
 import { getLinkedPointList } from './utils/common';
+import WaterPolygon from './shader/WaterPolygon';
 import water from './material/water.jpg';
+import p0 from './images/p0.jpg';
+import p1 from './images/p1.jpg';
+import p2 from './images/p2.png';
+import p3 from './images/p3.jpg';
 
 // 流向动态线
 export function addAnimationLine(from, to, viewer) {
@@ -117,6 +122,15 @@ export function addWaterAnimation(coordinates, viewer) {
     }),
   });
   viewer.scene.primitives.add(primitive);
+}
+
+// 水纹2
+export function addWaterAnimation2(coordinates, viewer) {
+  const positions = Cesium.Cartesian3.fromDegreesArrayHeights(coordinates);
+  const polygon = new WaterPolygon({
+    positions,
+  });
+  viewer.scene.primitives.add(polygon.primitive);
 }
 
 // 加载白模(自定义渲染)
@@ -239,4 +253,8 @@ export function animation1(viewer) {
       },
     }),
   );
+}
+
+export function animation2() {
+  // TODO
 }

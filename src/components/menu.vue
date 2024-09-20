@@ -42,6 +42,9 @@
         <li class="nav-item" @click="doWaterAnimation">
           <a class="nav-link" href="#">动态水面</a>
         </li>
+        <li class="nav-item" @click="doWaterAnimation2">
+          <a class="nav-link" href="#">动态水面2</a>
+        </li>
         <li class="nav-item" @click="do3DTiles">
           <a class="nav-link" href="#">白模渲染</a>
         </li>
@@ -78,6 +81,9 @@
         <li class="nav-item" @click="doAnimation1">
           <a class="nav-link" href="#">动效1</a>
         </li>
+        <li class="nav-item" @click="doAnimation2">
+          <a class="nav-link" href="#">动效2</a>
+        </li>
       </ul>
      </div>
   </nav>
@@ -95,8 +101,10 @@ import {
   addAnimationLine,
   addAnimationStraightLine,
   addWaterAnimation,
+  addWaterAnimation2,
   add3DTiles,
   animation1,
+  animation2,
 } from '../map';
 import ClusterLayer from '../map/layer/cluster';
 import OverLayer from '../map/layer/overlay';
@@ -130,6 +138,7 @@ export default {
       roll: 0,
     }) => {
       mapInstance.value.camera.lookAt(Cesium.Cartesian3.fromDegrees(xyz.x, xyz.y), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(opt.heading), Cesium.Math.toRadians(opt.pitch), xyz.z || 50000));
+      mapInstance.value.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
     };
     const doAnimationLine = () => {
       if (mapInstance.value) {
@@ -245,6 +254,31 @@ export default {
     };
     const doWaterAnimation = () => {
       addWaterAnimation(
+        [
+          114.49,
+          30.43,
+          0,
+          115.49,
+          30.43,
+          0,
+          115.49,
+          31.43,
+          0,
+          114.49,
+          31.43,
+          0,
+        ],
+        mapInstance.value,
+      );
+      setCenter({
+        x: 114.5985634205044,
+        y: 32.43079913513041,
+        z: 1000000,
+      });
+    };
+
+    const doWaterAnimation2 = () => {
+      addWaterAnimation2(
         [
           114.49,
           30.43,
@@ -406,6 +440,10 @@ export default {
       animation1(mapInstance.value);
     };
 
+    const doAnimation2 = () => {
+      animation2(mapInstance.value);
+    };
+
     return {
       keyBoard,
       isEyeMapShow,
@@ -413,6 +451,7 @@ export default {
       addFire,
       do3DTiles,
       doWaterAnimation,
+      doWaterAnimation2,
       addRightMenu,
       addMvt,
       addEyeMap,
@@ -430,6 +469,7 @@ export default {
       showExtent,
       addAnimationWall,
       doAnimation1,
+      doAnimation2,
     };
   },
 };

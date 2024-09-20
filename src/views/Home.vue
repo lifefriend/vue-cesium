@@ -26,6 +26,7 @@ export default {
   },
   setup() {
     const store = useStore();
+
     onMounted(() => {
       nextTick(() => {
         Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYzQ0NWQ5Zi1iNjU4LTQ0NTEtYWIzNC1hYzZlNDFmYzQyYzgiLCJpZCI6NjI1MCwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0NTc0MTc5OH0.oZJRh-eKtiJy6LyDNZQ0TgPmCMiRq2X3HaSr6y1X_ac';
@@ -43,6 +44,9 @@ export default {
           fullscreenButton: false, // 是否显示全屏按钮
           baseLayerPicker: false, // 是否显示图层选择器
           creditContainer: 'credit-container',
+          imageryProvider: new Cesium.ArcGisMapServerImageryProvider({
+            url: 'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer',
+          }),
         });
         store.commit('setMapInstance', viewer);
       });
